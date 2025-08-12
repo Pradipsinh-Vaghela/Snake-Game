@@ -3,10 +3,17 @@ ALIGNMENT = "center"
 SCORE_FONT = ("Courier",15,'normal')
 GAME_FONT = ("Courier",25,'normal')
 
+with open("data.txt",) as h_score:
+    HIGH_SCORE = int(h_score.read())
+    print(type(HIGH_SCORE))
+
 class ScoreBoard(Turtle):
     def __init__(self):
         super().__init__()
         self.score = 0
+        # self.high_score = HIGH_SCORE
+        with open("data.txt", ) as data:
+            self.high_score = int(data.read())
         self.color("white")
         self.penup()
         self.hideturtle()
@@ -15,9 +22,15 @@ class ScoreBoard(Turtle):
     def score_refresh(self):
         self.clear()
         self.goto(0, 275)
-        self.write(arg=f"Score is : {self.score}", move = True, align = ALIGNMENT, font = SCORE_FONT)
+        self.write(arg=f"Score is : {self.score} High Score : {self.high_score}", move = True, align = ALIGNMENT, font = SCORE_FONT)
+
+    def update_score(self):
         self.score += 1
 
-    def game_over(self):
-        self.goto(0,0)
-        self.write(arg=f"Game Over", move=True, align=ALIGNMENT, font=GAME_FONT)
+    def reset_score(self):
+        if self.score > self.high_score:
+            self.high_score = self.score
+        self.score = 0
+        with open("data.txt", mode="w") as data:
+            data = str(self.high_score)
+            h_score.write(data)
